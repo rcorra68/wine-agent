@@ -22,7 +22,7 @@ DATI DISPONIBILI:
 Rispondi con un oggetto JSON con ESATTAMENTE questi campi:
 {{
   "type": "DOCG oppure DOC oppure IGT",
-  "name": "nome ufficiale denominazione",
+  "title": "nome ufficiale denominazione compresa la tipologia se presente",
   "id": "slug-kebab-case",
   "aliases": ["alias1"],
   "year": "anno riconoscimento",
@@ -63,7 +63,7 @@ Rispondi con un oggetto JSON con ESATTAMENTE questi campi:
 """
 
 TIPOLOGY_BLOCK = """\
-#### {name}
+### {name}
 
 - **Caratteristiche sensoriali**: {sensory}
 - **Note disciplinari specifiche** (es. invecchiamento, alcol): {notes}
@@ -71,8 +71,8 @@ TIPOLOGY_BLOCK = """\
 
 TEMPLATE = """\
 ---
+title: {title}
 type: {type}
-name: {name}
 id: {id}
 aliases: {aliases}
 year: {year}
@@ -93,9 +93,9 @@ soils: "{soils}"
 tags: ["enologia", "enologia/italia", "enologia/regioni"]
 ---
 
-# 🍷 [[{name}]]
+## 🍷 [[{title}]]
 
-## 🌄 Descrizione del Territorio
+### 🌄 Descrizione del Territorio
 
 - **Descrizione area geografica**: {geo_description}
 - **Altitudine media**: {altitude}
@@ -105,7 +105,7 @@ tags: ["enologia", "enologia/italia", "enologia/regioni"]
 
 ---
 
-## 🍇 Vitigni principali e secondari
+### 🍇 Vitigni principali e secondari
 
 - **Vitigno principale**: {grape_primary}
 - **Percentuale minima**: {grape_primary_min}%
@@ -114,7 +114,7 @@ tags: ["enologia", "enologia/italia", "enologia/regioni"]
 
 ---
 
-## ⚙️ Disciplinare
+### ⚙️ Disciplinare
 
 - **Resa per ettaro**: {yield_per_hectare}
 - **Gradazione minima**: {min_alcohol}
@@ -124,7 +124,7 @@ tags: ["enologia", "enologia/italia", "enologia/regioni"]
 
 ---
 
-## 👃 Caratteristiche organolettiche (denominazione base)
+### 👃 Caratteristiche organolettiche (denominazione base)
 
 - **Colore**: {color}
 - **Profumo**: {aroma}
@@ -136,14 +136,14 @@ tags: ["enologia", "enologia/italia", "enologia/regioni"]
 
 ---
 
-## 🍽️ Abbinamenti gastronomici
+### 🍽️ Abbinamenti gastronomici
 
 - **Piatti tipici**: {food_pairings}
 - **Occasioni d'uso**: {occasions}
 
 ---
 
-## 🏷️ Note e curiosità
+### 🏷️ Note e curiosità
 
 - **Storia della denominazione**: {history}
 - **Produttori importanti**: {producers}
@@ -161,7 +161,7 @@ def _render_tipologies_section(tipologies_detail: list) -> str:
         )
         for t in tipologies_detail
     )
-    return "### 🍷 Tipologie specifiche (se presenti)\n\n" + blocks
+    return "#### 🍷 Tipologie specifiche (se presenti)\n\n" + blocks
 
 
 def render(data: dict) -> str:
@@ -174,8 +174,8 @@ def render(data: dict) -> str:
     )
     return TEMPLATE.format(
         type=data.get("type", ""),
-        name=data.get("name", ""),
-        id=data.get("id") or slugify(data.get("name", "unknown")),
+        title=data.get("title", ""),
+        id=data.get("id") or slugify(data.get("title", "unknown")),
         aliases=format_yaml_list(data.get("aliases", [])),
         year=data.get("year", ""),
         region=data.get("region", ""),

@@ -25,6 +25,13 @@ def get_client() -> anthropic.Anthropic:
 
 # ── Helpers ────────────────────────────────────────────────────────────────────
 
+def extract_type(name: str):
+    match = re.search(r"\b(DOCG|DOC|IGT)\b$", name)
+    if match:
+        return match.group(1)
+    return ""
+
+
 def slugify(text: str) -> str:
     text = text.lower().strip()
     for src, dst in [("àáâã","a"),("èéêë","e"),("ìíîï","i"),("òóôõ","o"),("ùúûü","u")]:
@@ -43,18 +50,24 @@ def format_yaml_list(items) -> str:
     return "[" + ", ".join(f'"{i}"' for i in items) + "]"
 
 
-def call_claude(client: anthropic.Anthropic, system: str, user: str, max_tokens: int = 2048) -> dict:
-    """Chiama Claude e decodifica la risposta JSON."""
-    message = client.messages.create(
-        model="claude-sonnet-4-20250514",
-        max_tokens=max_tokens,
-        system=system,
-        messages=[{"role": "user", "content": user}],
-    )
-    raw = message.content[0].text.strip()
-    raw = re.sub(r"^```json\s*|^```\s*|\s*```$", "", raw, flags=re.MULTILINE).strip()
-    return json.loads(raw)
-
+def call_claude(client, system, user, max_tokens=4096, retries=2):
+    for attempt in range(retries + 1):
+        try:
+            message = client.messages.create(
+                model="claude-sonnet-4-6",
+                max_tokens=max_tokens,
+                system=system,
+                messages=[{"role": "user", "content": user}],
+            )
+            raw = message.content[0].text.strip()
+            raw = re.sub(r"^```json\s*|^```\s*|\s*```$", "", raw, flags=re.MULTILINE).strip()
+            return json.loads(raw)
+        except json.JSONDecodeError:
+            if attempt < retries:
+                print(f"(retry {attempt+1}/{retries})", end=" ", flush=True)
+                time.sleep(2)
+            else:
+                raise
 
 # ── CSV reader ─────────────────────────────────────────────────────────────────
 

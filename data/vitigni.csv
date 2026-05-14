@@ -1,9 +1,3 @@
 name,color,origin_region
-Nebbiolo,rosso,Piemonte
-Sangiovese,rosso,Toscana
-Corvina Veronese,rosso,Veneto
-Sagrantino,rosso,Umbria
-Vermentino,bianco,Sardegna
-Glera,bianco,Veneto
-Primitivo,rosso,Puglia
-Fiano,bianco,Campania
+Nebbiolo,,
+Sagrantino,
