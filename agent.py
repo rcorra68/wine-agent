@@ -6,7 +6,7 @@ Uso:
     python agent.py --mode grape        --input data/vitigni.csv
 
 Opzioni:
-    --output DIR     Directory di output (default: output/<mode>/)
+    --output DIR     Directory di output (default: data/output/<mode>/)
     --delay FLOAT    Secondi tra chiamate API (default: 1.0)
     --dry-run        Simula senza chiamare l'API
 """
@@ -42,11 +42,11 @@ def main():
                         help="Simula senza chiamare l'API")
     args = parser.parse_args()
 
-    output_dir = Path(args.output) if args.output else Path("output") / args.mode
+    output_dir = Path(args.output) if args.output else Path("data/output") / args.mode
     rows = read_csv(Path(args.input))
     mode_module = MODES[args.mode]
 
-    client = get_client()
+    client = None if args.dry_run else get_client()
     process_fn = mode_module.make_processor(client)
 
     run_agent(

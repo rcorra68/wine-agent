@@ -177,7 +177,7 @@ def render(data: dict) -> str:
         first_attestation=data.get("first_attestation", ""),
         berry_type=data.get("berry_type", ""),
         vigor=data.get("vigor", ""),
-        yield=data.get("yield", ""),
+        yield_avg=data.get("yield", ""),
         ripening_text=data.get("ripening_text", ""),
         climate_resistance=data.get("climate_resistance", ""),
         aroma_notes=data.get("aroma_notes", ""),
