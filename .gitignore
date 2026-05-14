@@ -1,0 +1,58 @@
+# -----------------------------------
+# Python
+# -----------------------------------
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# pytest
+.pytest_cache/
+
+# mypy
+.mypy_cache/
+
+# Ruff
+.ruff_cache/
+
+# Coverage
+.coverage
+htmlcov/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# macOS
+.DS_Store
+
+# VSCode
+.vscode/
+
+# Environment variables / secrets
+.env
+
+# Project output
+data/output/
+
+# Optional local caches
+cache/
+tmp/
+logs/
+
+# Obsidian (optional)
+.obsidian/workspace.json
+.obsidian/cache/
+.obsidian/workspace-mobile.json
