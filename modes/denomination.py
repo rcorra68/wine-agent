@@ -22,12 +22,10 @@ DATI DISPONIBILI:
 Rispondi con un oggetto JSON con ESATTAMENTE questi campi:
 {{
   "type": "DOCG oppure DOC oppure IGT",
-  "title": "nome ufficiale denominazione compresa la tipologia se presente",
   "id": "slug-kebab-case",
   "aliases": ["alias1"],
   "year": "anno riconoscimento",
   "region": "regione italiana",
-  "subregions": ["sottozona1"],
   "provinces": ["Prov1"],
   "grape_primary": "vitigno principale",
   "grape_primary_min": "percentuale minima es. 85",
@@ -77,7 +75,7 @@ id: {id}
 aliases: {aliases}
 year: {year}
 region: "[[{region}]]"
-subregions: {subregions}
+ais_zone: {ais_zone}
 provinces: {provinces}
 grape_primary:
   - "[[{grape_primary}]]"
@@ -179,7 +177,7 @@ def render(data: dict) -> str:
         aliases=format_yaml_list(data.get("aliases", [])),
         year=data.get("year", ""),
         region=data.get("region", ""),
-        subregions=format_yaml_list(data.get("subregions", [])),
+        ais_zone=data.get("ais_zone", ""),
         provinces=format_yaml_list(data.get("provinces", [])),
         grape_primary=data.get("grape_primary", ""),
         grape_primary_min=data.get("grape_primary_min", ""),
@@ -213,9 +211,15 @@ def render(data: dict) -> str:
 
 
 def make_processor(client):
-    """Restituisce la funzione process(row) → (slug, markdown)."""
     def process(row: dict) -> tuple[str, str]:
+        columns = list(row.values())
+        
         data = call_claude(client, SYSTEM_PROMPT, build_prompt(row))
-        slug = data.get("id") or slugify(data.get("name", "unknown"))
-        return slug, render(data)
-    return process
+        
+        # Override diretto: questi campi non li lasciamo interpretare a Claude
+        data["title"] = columns[0] if columns else data.get("title", "")
+        data["ais_zone"] = columns[1] if len(columns) > 1 else ""
+        
+        filename = (data.get("name") or slugify(data.get("id", "unknown"))).strip()
+        return filename, render(data)   # ← mancava questo
+    return process                      # ← questo c'era ma era fuori indentazione

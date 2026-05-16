@@ -34,7 +34,7 @@ Rispondi con un oggetto JSON con ESATTAMENTE questi campi:
   "first_attestation": "prima attestazione storica documentata",
   "berry_type": "bianca / rossa / nera",
   "vigor": "descrizione vigoria della pianta",
-  "yield": "resa media es. 80-100 q/ha",
+  "yield_avg": "resa media es. 80-100 q/ha",
   "ripening_text": "descrizione maturazione con periodo approssimativo",
   "climate_resistance": "resistenza a siccità, freddo, malattie",
   "aroma_notes": "note aromatiche principali (frutti, fiori, spezie, ecc.)",
@@ -60,7 +60,7 @@ Rispondi con un oggetto JSON con ESATTAMENTE questi campi:
 TEMPLATE = """\
 ---
 type: grape
-name: "{name}"
+title: "{name}"
 id: {id}
 aliases: {aliases}
 color: {color}
@@ -71,9 +71,9 @@ ripening: {ripening}
 tags: ["enologia", "enologia/vitigni", "enologia/italia"]
 ---
 
-# 🍇 {name}
+## 🍇 {name}
 
-## 🌍 Origine
+### 🌍 Origine
 
 - **Paese d'origine**: {origin_country_text}
 - **Regione storica**: {origin_region_text}
@@ -81,17 +81,17 @@ tags: ["enologia", "enologia/vitigni", "enologia/italia"]
 
 ---
 
-## 🌱 Caratteristiche ampelografiche
+### 🌱 Caratteristiche ampelografiche
 
 - **Tipo di bacca**: {berry_type}
 - **Vigoria della pianta**: {vigor}
-- **Resa media**: {yield}
+- **Resa media**: {yield_avg}
 - **Maturazione**: {ripening_text}
 - **Resistenza climatica**: {climate_resistance}
 
 ---
 
-## 👃 Profilo aromatico
+### 👃 Profilo aromatico
 
 - **Note principali**: {aroma_notes}
 - **Intensità aromatica**: {aroma_intensity}
@@ -99,7 +99,7 @@ tags: ["enologia", "enologia/vitigni", "enologia/italia"]
 
 ---
 
-## 🍷 Ruolo enologico
+### 🍷 Ruolo enologico
 
 - **Ruolo principale**: {enological_role}
 - **Vinificazione tipica**: {vinification}
@@ -108,7 +108,7 @@ tags: ["enologia", "enologia/vitigni", "enologia/italia"]
 
 ---
 
-## 🌐 Diffusione
+### 🌐 Diffusione
 
 - **Regioni principali in Italia**: {italian_regions_text}
 - **Diffusione internazionale**: {international_spread}
@@ -116,7 +116,7 @@ tags: ["enologia", "enologia/vitigni", "enologia/italia"]
 
 ---
 
-## 🧬 Relazioni WineDB
+### 🧬 Relazioni WineDB
 
 - **Vitigni simili**: {similar_grapes_text}
 - **Vitigni spesso associati**: {associated_grapes_text}
@@ -124,16 +124,16 @@ tags: ["enologia", "enologia/vitigni", "enologia/italia"]
 
 ---
 
-## 🏷️ Note e curiosità
+### 🏷️ Note e curiosità
 
-- Origine del nome: {name_origin}
-- Storia: {history}
-- Evoluzione nel tempo: {evolution}
-- Curiosità ampelografiche: {ampelographic_curiosities}
+- **Origine del nome**: {name_origin}
+- **Storia**: {history}
+- **Evoluzione nel tempo**: {evolution}
+- **Curiosità ampelografiche**: {ampelographic_curiosities}
 
 ---
 
-## 🧠 Appunti personali
+### 🧠 Appunti personali
 
 - (impressioni, collegamenti mentali, confronti con altri vitigni)
 
@@ -177,7 +177,7 @@ def render(data: dict) -> str:
         first_attestation=data.get("first_attestation", ""),
         berry_type=data.get("berry_type", ""),
         vigor=data.get("vigor", ""),
-        yield_avg=data.get("yield", ""),
+        yield_avg=data.get("yield_avg", ""),
         ripening_text=data.get("ripening_text", ""),
         climate_resistance=data.get("climate_resistance", ""),
         aroma_notes=data.get("aroma_notes", ""),
@@ -201,9 +201,9 @@ def render(data: dict) -> str:
 
 
 def make_processor(client):
-    """Restituisce la funzione process(row) → (slug, markdown)."""
     def process(row: dict) -> tuple[str, str]:
         data = call_claude(client, SYSTEM_PROMPT, build_prompt(row))
-        slug = data.get("id") or slugify(data.get("name", "unknown"))
-        return slug, render(data)
-    return process
+
+        filename = (data.get("name") or slugify(data.get("id", "unknown"))).strip()
+        return filename, render(data)   # ← mancava questo
+    return process                      # ← questo c'era ma era fuori indentazione
