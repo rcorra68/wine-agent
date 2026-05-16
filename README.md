@@ -14,10 +14,10 @@ wine-agent/
 │   └── grape.py          ← template + prompt per vitigni
 ├── data/
 │   ├── denominazioni.csv
-│   └── vitigni.csv
-└── output/
-    ├── denomination/     ← schede denominazioni generate
-    └── grape/            ← schede vitigni generate
+│   ├── vitigni.csv
+└───┴── output/
+        ├── denomination/     ← schede denominazioni generate
+        └── grape/            ← schede vitigni generate
 ```
 
 ## Requisiti
@@ -54,8 +54,9 @@ python agent.py --mode grape --input data/vitigni.csv --output mia/cartella/ --d
 ## Formato CSV
 
 ### Denominazioni
+
 | Colonna | Obbligatoria | Esempio |
-|---|---|---|
+| --- | --- | --- |
 | `name` | ✅ | `Barolo` |
 | `type` | No | `DOCG` |
 | `region` | No | `Piemonte` |
@@ -64,8 +65,9 @@ python agent.py --mode grape --input data/vitigni.csv --output mia/cartella/ --d
 | `provinces` | No | `Cuneo` |
 
 ### Vitigni
+
 | Colonna | Obbligatoria | Esempio |
-|---|---|---|
+| --- | --- | --- |
 | `name` | ✅ | `Nebbiolo` |
 | `color` | No | `rosso` |
 | `origin_region` | No | `Piemonte` |
