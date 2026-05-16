@@ -69,7 +69,7 @@ TIPOLOGY_BLOCK = """\
 
 TEMPLATE = """\
 ---
-title: {title}
+title: {name}
 type: {type}
 id: {id}
 aliases: {aliases}
@@ -172,7 +172,7 @@ def render(data: dict) -> str:
     )
     return TEMPLATE.format(
         type=data.get("type", ""),
-        title=data.get("title", ""),
+        title=data.get("name", ""),
         id=data.get("id") or slugify(data.get("title", "unknown")),
         aliases=format_yaml_list(data.get("aliases", [])),
         year=data.get("year", ""),
@@ -220,6 +220,6 @@ def make_processor(client):
         data["title"] = columns[0] if columns else data.get("title", "")
         data["ais_zone"] = columns[1] if len(columns) > 1 else ""
         
-        filename = (data.get("name") or slugify(data.get("id", "unknown"))).strip()
+        filename = (data.get("title") or slugify(data.get("id", "unknown"))).strip()
         return filename, render(data)   # ← mancava questo
     return process                      # ← questo c'era ma era fuori indentazione
