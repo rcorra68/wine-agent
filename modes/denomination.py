@@ -69,7 +69,7 @@ TIPOLOGY_BLOCK = """\
 
 TEMPLATE = """\
 ---
-title: {name}
+title: {title}
 type: {type}
 id: {id}
 aliases: {aliases}
@@ -172,7 +172,7 @@ def render(data: dict) -> str:
     )
     return TEMPLATE.format(
         type=data.get("type", ""),
-        title=data.get("name", ""),
+        title=data.get("title", ""),
         id=data.get("id") or slugify(data.get("title", "unknown")),
         aliases=format_yaml_list(data.get("aliases", [])),
         year=data.get("year", ""),
