@@ -4,7 +4,7 @@ Agente Python che legge file CSV e genera automaticamente schede Markdown per **
 
 ## Struttura del progetto
 
-```
+```plaintext
 wine-agent/
 ├── agent.py                ← entry point unificato
 ├── core/
@@ -23,7 +23,7 @@ wine-agent/
 ## Requisiti
 
 - Python 3.9+
-- Una API key di Anthropic (https://console.anthropic.com/)
+- Una API key di Anthropic (<https://console.anthropic.com/>)
 
 ```bash
 pip install anthropic
@@ -54,8 +54,9 @@ python agent.py --mode grape --input data/vitigni.csv --output mia/cartella/ --d
 ## Formato CSV
 
 ### Denominazioni
+
 | Colonna | Obbligatoria | Esempio |
-|---|---|---|
+| --- | --- | --- |
 | `name` | ✅ | `Barolo` |
 | `type` | No | `DOCG` |
 | `region` | No | `Piemonte` |
@@ -64,8 +65,9 @@ python agent.py --mode grape --input data/vitigni.csv --output mia/cartella/ --d
 | `provinces` | No | `Cuneo` |
 
 ### Vitigni
+
 | Colonna | Obbligatoria | Esempio |
-|---|---|---|
+| --- | --- | --- |
 | `name` | ✅ | `Nebbiolo` |
 | `color` | No | `rosso` |
 | `origin_region` | No | `Piemonte` |
